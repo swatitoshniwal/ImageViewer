@@ -53,7 +53,7 @@ class Login extends Component{
 
         if (this.state.username === "" || this.state.password === "") { return }
 
-        if (this.state.username === "admin" && this.state.password === "admin") {
+        if (this.state.username === "swati" && this.state.password === "gandhi") {
             sessionStorage.setItem('username','admin');
             sessionStorage.setItem('access-token', '8661035776.d0fcd39.39f63ab2f88d4f9c92b0862729ee2784');
             this.setState({ loggedIn: true });

@@ -8,6 +8,13 @@ const styles = theme => ({
     appheader:{
         backgroundColor:'#263238'
     },
+
+    search:{
+        borderRadius: '4px',
+        backgroundColor: '#c0c0c0',
+        marginLeft: 0,
+        width: '300px',
+    }
 })
 
 class Header extends Component{
@@ -19,12 +26,13 @@ class Header extends Component{
     }
 
     render(){
-        const {classes} = this.props;
+        const {classes,screen} = this.props;
         return(
             <div> 
                 <Toolbar>
                     <AppBar className={classes.appheader}> 
-                        <header className="header-logo">Image Viewer</header> 
+                    {(screen === "Login" || screen === "Home") && <span className="header-logo">Image Viewer</span>} 
+                    <div className={classes.search}></div>
                     </AppBar>
                 </Toolbar>
             </div>
