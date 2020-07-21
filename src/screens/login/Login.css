@@ -2,3 +2,15 @@
     display: flex;
     flex-direction: column;
   }
+
+.red{
+    color: red;
+}
+
+.dispNone {
+    display:none;
+}
+
+.dispBlock {
+    display: block;
+}
