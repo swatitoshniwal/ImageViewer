@@ -16,10 +16,20 @@ const styles = {
         left: '50%',
         width: '325px',
         transform: 'translateX(-50%)',
+    },
+    title: {
+        fontSize: 20
     }
-}
+};
 
 class Login extends Component{
+
+    constructor() {
+        super();
+        this.state = {
+        };
+    }
+
     render(){
         return(
             <div className= "main-container">
@@ -32,7 +42,7 @@ class Login extends Component{
                             <Input id="username" type="text" username={this.state.username}/>
                         </FormControl><br/><br/>
                         <FormControl>
-                            <InputLabel htmlFor="password"> Username </InputLabel>
+                            <InputLabel htmlFor="password"> Password </InputLabel>
                             <Input id="password" type="password"/>
                         </FormControl><br/><br/>
                     </CardContent>

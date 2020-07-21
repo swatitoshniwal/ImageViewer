@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-//import Header from './common/header/Header';
 import * as serviceWorker from './serviceWorker';
-import Login from './screens/login/Login'
+import App from './App';
+import { BrowserRouter } from 'react-router-dom'
+
 
 ReactDOM.render(
-    <Login/>,document.getElementById('root')
+    <BrowserRouter><App/></BrowserRouter>
+    ,document.getElementById('root')
 );
 
 serviceWorker.unregister();
