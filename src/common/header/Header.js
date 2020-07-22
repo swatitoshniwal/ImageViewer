@@ -7,6 +7,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Popover from '@material-ui/core/Popover';
+import Box from '@material-ui/core/Box'
 
 const styles = theme => ({
     appheader:{
@@ -19,10 +22,6 @@ const styles = theme => ({
         backgroundColor: '#c0c0c0',
         marginLeft: '0',
         width: '300px',
-    },
-
-    grow:{
-        flexGrow: 0
     },
 
     searchIcon: {
@@ -65,11 +64,25 @@ class Header extends Component{
         };
     }
 
-    handleClick = (event) =>{
+    handleClick = (e) =>{
         this.setState({
-          anchorEl: event.currentTarget
+          anchorEl: e.currentTarget
         })
       }
+
+    handleAccount = ()=>{
+        this.props.handleAccount();
+        this.handleClose();
+    }
+    
+    handleLogout = ()=>{
+        this.props.handleLogout();
+        this.handleClose();
+    }
+    
+    handleClose = () =>{
+        this.setState({ anchorEl: null });
+    }
 
     render(){
         const {classes,screen} = this.props;
@@ -77,8 +90,9 @@ class Header extends Component{
             <div> 
                 <AppBar className={classes.appheader}> 
                     <Toolbar>
-                        <div className={classes.grow}/>
-                        {(screen === "Login" || screen === "Home") && <span className="header-logo">Image Viewer</span>} 
+                        <Box flexGrow={1}>
+                            {(screen === "Login" || screen === "Home") && <span className="header-logo">Image Viewer</span>} 
+                        </Box>
                         {(screen === "Home") &&
                             <div className={classes.search}>
                                 <div className={classes.searchIcon}>
@@ -91,6 +105,29 @@ class Header extends Component{
                                     <Avatar alt="Profile Pic" src={this.props.userProfileUrl} 
                                     className={classes.avatar} style={{border: "1px solid #fff"}}/>
                                 </IconButton>
+                                <Popover
+                                    id="simple-menu"
+                                    anchorEl={this.state.anchorEl}
+                                    open={Boolean(this.state.anchorEl)}
+                                    onClose={this.handleClose}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}>
+                                    <div style={{padding:'5px'}}>
+                                        {(screen === "Home") &&
+                                        <div>
+                                            <MenuItem onClick={this.handleAccount}>My Account</MenuItem>
+                                            <div className={classes.hr}/>
+                                        </div>
+                                        }
+                                        <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                                    </div>
+                                </Popover>
                             </div>
                         }
                     </Toolbar>
