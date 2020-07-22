@@ -58,6 +58,8 @@ class Home extends Component{
                     handleAccount={this.navigateToAccount}/>
 
             </div>
+            
+
         )
     }
 }

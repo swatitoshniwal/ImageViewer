@@ -5,6 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 
 const styles = theme => ({
     appheader:{
@@ -12,14 +14,15 @@ const styles = theme => ({
     },
 
     search:{
+        position: 'relative',
         borderRadius: '4px',
         backgroundColor: '#c0c0c0',
-        marginLeft: 0,
+        marginLeft: '0',
         width: '300px',
     },
 
     grow:{
-        flexGrow: 1
+        flexGrow: 0
     },
 
     searchIcon: {
@@ -31,9 +34,9 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         color:'#000000'
-      },
+    },
 
-      inputInput: {
+    inputInput: {
         paddingTop: theme.spacing(1),
         paddingRight: theme.spacing(1),
         paddingBottom: theme.spacing(1),
@@ -41,12 +44,17 @@ const styles = theme => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-          width: 120,
-          '&:focus': {
+            width: 120,
+           '&:focus': {
             width: 200
-          }
+            }
         }
       },
+
+    avatar: {
+        width: 50,
+        height: 50,
+    },
 })
 
 class Header extends Component{
@@ -56,6 +64,12 @@ class Header extends Component{
         anchorEl: null,
         };
     }
+
+    handleClick = (event) =>{
+        this.setState({
+          anchorEl: event.currentTarget
+        })
+      }
 
     render(){
         const {classes,screen} = this.props;
@@ -70,9 +84,13 @@ class Header extends Component{
                                 <div className={classes.searchIcon}>
                                     <SearchIcon/>
                                 </div>
-                                <InputBase onChange={(e)=>{this.props.searchHandler(e.target.value)}} placeholder="Search…" classes={{
-                                input: classes.inputInput
-                                }}/>
+                                <InputBase onChange={(e)=>{this.props.searchHandler(e.target.value)}} 
+                                placeholder="Search…" 
+                                classes={{input: classes.inputInput}}/>
+                                <IconButton onClick={this.handleClick}>
+                                    <Avatar alt="Profile Pic" src={this.props.userProfileUrl} 
+                                    className={classes.avatar} style={{border: "1px solid #fff"}}/>
+                                </IconButton>
                             </div>
                         }
                     </Toolbar>
