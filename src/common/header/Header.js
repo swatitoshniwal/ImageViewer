@@ -101,6 +101,9 @@ class Header extends Component{
                                 <InputBase onChange={(e)=>{this.props.searchHandler(e.target.value)}} 
                                 placeholder="Search…" 
                                 classes={{input: classes.inputInput}}/>
+                            </div>}
+                        {(screen === "Home") &&
+                            <div>
                                 <IconButton onClick={this.handleClick}>
                                     <Avatar alt="Profile Pic" src={this.props.userProfileUrl} 
                                     className={classes.avatar} style={{border: "1px solid #fff"}}/>
