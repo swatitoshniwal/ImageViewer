@@ -6,11 +6,24 @@ import {constant} from '../../common/utils'
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
 const styles = theme => ({
     prop: {
         maxWidth: 1100,
     },
+    gridList:{
+        width: 1100,
+        height: 'auto',
+        overflowY: 'auto',
+    },
+    grid:{
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center',
+        marginTop:90
+    }
 });
 
 class Home extends Component{
@@ -59,13 +72,22 @@ class Home extends Component{
                     searchHandler={this.onSearchEntered}
                     handleLogout={this.logout}
                     handleAccount={this.navigateToAccount}/>
-                <div className="body-main-container">
-                    <Card classes={classes.prop}>
-                        <CardHeader avatar={
-                            <Avatar alt="User Profile Pic" src={this.props.userProfileUrl} className={classes.avatar}/>
-                            }
-                        title={this.props.username}/>
-                    </Card>
+                <div className={classes.grid}>
+                    <GridList className={classes.gridList}>
+                        {this.state.filteredData.map(item => (
+                            <GridListTile key={item.id}>
+
+                                <div className="body-main-container">
+                                <Card classes={classes.prop}>
+                                    <CardHeader avatar={
+                                        <Avatar alt="User Profile Pic" src={this.props.userProfileUrl} className={classes.avatar}/>
+                                        }
+                                        title={this.props.username}
+                                        subheader={}/>
+                                </Card>
+                                </div>
+                            </GridListTile>))}
+                    </GridList>
                 </div>
             </div>
 
