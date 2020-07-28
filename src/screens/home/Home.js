@@ -3,11 +3,14 @@ import './Home.css';
 import Header from '../../common/header/Header';
 import {withStyles} from '@material-ui/core/styles';
 import {constant} from '../../common/utils'
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
-    card: {
+    prop: {
         maxWidth: 1100,
-      },
+    },
 });
 
 class Home extends Component{
@@ -56,9 +59,15 @@ class Home extends Component{
                     searchHandler={this.onSearchEntered}
                     handleLogout={this.logout}
                     handleAccount={this.navigateToAccount}/>
-
+                <div className="body-main-container">
+                    <Card classes={classes.prop}>
+                        <CardHeader avatar={
+                            <Avatar alt="User Profile Pic" src={this.props.userProfileUrl} className={classes.avatar}/>
+                            }
+                        title={this.props.username}/>
+                    </Card>
+                </div>
             </div>
-            
 
         )
     }
