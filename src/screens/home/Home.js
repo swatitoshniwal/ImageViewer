@@ -36,7 +36,6 @@ class Home extends Component{
             data: [],
             filteredData:[],
             userData:{},
-
         }
     }
 
@@ -76,16 +75,9 @@ class Home extends Component{
                     <GridList className={classes.gridList}>
                         {this.state.filteredData.map(item => (
                             <GridListTile key={item.id}>
-
-                                <div className="body-main-container">
-                                <Card classes={classes.prop}>
-                                    <CardHeader avatar={
-                                        <Avatar alt="User Profile Pic" src={this.props.userProfileUrl} className={classes.avatar}/>
-                                        }
-                                        title={this.props.username}
-                                        subheader={}/>
-                                </Card>
-                                </div>
+                                <HomeItem
+                                    classes={classes}
+                                    item={item}/>
                             </GridListTile>))}
                     </GridList>
                 </div>
@@ -94,5 +86,28 @@ class Home extends Component{
         )
     }
 }
+
+class HomeItem extends Component{
+    constructor(){
+        super();
+        this.state={
+
+        }
+    }
+
+    render(){
+        const{classes, item} = this.props;
+            return(
+                <div className="body-main-container">
+                    <Card classes={classes.prop}>
+                        <CardHeader avatar={
+                            <Avatar alt="User Profile Pic" src={item.props.userProfileUrl} className={classes.avatar}/>}
+                        title={item.props.username}
+                        subheader={setTimeout}/>
+                    </Card>
+                </div>
+                )
+            }
+        }
 
 export default withStyles(styles)(Home)
