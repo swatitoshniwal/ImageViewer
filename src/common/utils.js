@@ -1,4 +1,4 @@
-export const constant = {
-    userApi:"https://graph.instagram.com/me/media?fields=id,caption&access_token=IGQVJVbUxRVUdpWUNtZAHo5TE1iLUxaeWF4ZAnJGTnh1WkUzSTlrMEFYVTFOdDFNX21LWWdKYlVWaFZAUSTZAfbGI2eXpJb18ySmwwZAHVUdjBxdm9qUGdfc3ZAvRVdFVFAwbThTYUJFSDBwS1ZASQUt6ZAXRfVllBWWs3ZAG9kdDhB",
-    mediaApi:"https://graph.instagram.com/17895695668004550?fields=id,media_type,media_url,username,timestamp&access_token=IGQVJVbUxRVUdpWUNtZAHo5TE1iLUxaeWF4ZAnJGTnh1WkUzSTlrMEFYVTFOdDFNX21LWWdKYlVWaFZAUSTZAfbGI2eXpJb18ySmwwZAHVUdjBxdm9qUGdfc3ZAvRVdFVFAwbThTYUJFSDBwS1ZASQUt6ZAXRfVllBWWs3ZAG9kdDhB"
+export const constants = {
+    listMediaApi:"https://graph.instagram.com/me/media",
+    mediaApi:"https://graph.instagram.com/"
 }
