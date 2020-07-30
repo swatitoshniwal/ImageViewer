@@ -8,9 +8,12 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import CardMedia from '@material-ui/core/CardMedia';
 
 const styles = theme => ({
-    prop: {
+    card: {
         maxWidth: 1100,
     },
     gridList:{
@@ -59,7 +62,8 @@ class Home extends Component{
     
     navigateToAccount = () =>{
         this.props.history.push('/profile');
-      }
+    }
+
 
     render(){
         const{classes} = this.props;
@@ -72,7 +76,7 @@ class Home extends Component{
                     handleLogout={this.logout}
                     handleAccount={this.navigateToAccount}/>
                 <div className={classes.grid}>
-                    <GridList className={classes.gridList}>
+                    <GridList className={classes.gridList} cellHeight={'auto'}>
                         {this.state.filteredData.map(item => (
                             <GridListTile key={item.id}>
                                 <HomeItem
@@ -82,8 +86,7 @@ class Home extends Component{
                     </GridList>
                 </div>
             </div>
-
-        )
+        );
     }
 }
 
@@ -97,13 +100,42 @@ class HomeItem extends Component{
 
     render(){
         const{classes, item} = this.props;
+
+        let createdTime = new Date(0);
+        createdTime.setUTCSeconds(item.created_time);
+        let yyyy = createdTime.getFullYear();
+        let mm = createdTime.getMonth() + 1;
+        let dd = createdTime.getDate();
+
+        let HH = createdTime.getHours();
+        let MM = createdTime.getMinutes();
+        let ss = createdTime.getSeconds();
+
+        let time = dd+"/"+mm+"/"+yyyy+" "+HH+":"+MM+":"+ss;
+        let hashTags = item.tags.map(hash =>{
+        return "#"+hash;
+        });
             return(
                 <div className="body-main-container">
-                    <Card classes={classes.prop}>
+                    <Card classes={classes.card}>
                         <CardHeader avatar={
                             <Avatar alt="User Profile Pic" src={item.props.userProfileUrl} className={classes.avatar}/>}
-                        title={item.props.username}
-                        subheader={setTimeout}/>
+                            title={item.props.username}
+                            subheader={time}/>
+                            <CardContent>
+                                <CardMedia
+                                    className={classes.media}
+                                    image={item.images.standard_resolution.url}
+                                    title={item.caption.text}/>
+                                    <div  className={classes.hr}>
+                                        <Typography component="p">
+                                            {item.caption.text}
+                                        </Typography>
+                                        <Typography style={{color:'#4dabf5'}} component="p" >
+                                            {hashTags.join(' ')}
+                                        </Typography>
+                                    </div>
+                            </CardContent>
                     </Card>
                 </div>
                 )
