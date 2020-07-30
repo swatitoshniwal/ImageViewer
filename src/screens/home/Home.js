@@ -75,71 +75,9 @@ class Home extends Component{
                     searchHandler={this.onSearchEntered}
                     handleLogout={this.logout}
                     handleAccount={this.navigateToAccount}/>
-                <div className={classes.grid}>
-                    <GridList className={classes.gridList} cellHeight={'auto'}>
-                        {this.state.filteredData.map(item => (
-                            <GridListTile key={item.id}>
-                                <HomeItem
-                                    classes={classes}
-                                    item={item}/>
-                            </GridListTile>))}
-                    </GridList>
-                </div>
             </div>
         );
     }
 }
-
-class HomeItem extends Component{
-    constructor(){
-        super();
-        this.state={
-
-        }
-    }
-
-    render(){
-        const{classes, item} = this.props;
-
-        let createdTime = new Date(0);
-        createdTime.setUTCSeconds(item.created_time);
-        let yyyy = createdTime.getFullYear();
-        let mm = createdTime.getMonth() + 1;
-        let dd = createdTime.getDate();
-
-        let HH = createdTime.getHours();
-        let MM = createdTime.getMinutes();
-        let ss = createdTime.getSeconds();
-
-        let time = dd+"/"+mm+"/"+yyyy+" "+HH+":"+MM+":"+ss;
-        let hashTags = item.tags.map(hash =>{
-        return "#"+hash;
-        });
-            return(
-                <div className="body-main-container">
-                    <Card classes={classes.card}>
-                        <CardHeader avatar={
-                            <Avatar alt="User Profile Pic" src={item.props.userProfileUrl} className={classes.avatar}/>}
-                            title={item.props.username}
-                            subheader={time}/>
-                            <CardContent>
-                                <CardMedia
-                                    className={classes.media}
-                                    image={item.images.standard_resolution.url}
-                                    title={item.caption.text}/>
-                                    <div  className={classes.hr}>
-                                        <Typography component="p">
-                                            {item.caption.text}
-                                        </Typography>
-                                        <Typography style={{color:'#4dabf5'}} component="p" >
-                                            {hashTags.join(' ')}
-                                        </Typography>
-                                    </div>
-                            </CardContent>
-                    </Card>
-                </div>
-                )
-            }
-        }
 
 export default withStyles(styles)(Home)
