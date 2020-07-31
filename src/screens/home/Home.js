@@ -9,12 +9,13 @@ import GridListTile from '@material-ui/core/GridListTile';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import CardContent from '@material-ui/core/CardContent';
+import Moment from 'react-moment';
 import Typography from '@material-ui/core/Typography';
 import {constants} from '../../common/utils';
 
 const styles = theme => ({
     card: {
-        maxWidth: 300,
+        maxWidth: 500,
         margin: "auto",
     },
     media: {
@@ -91,18 +92,20 @@ class Home extends Component{
         });
     }
     
-    getMediaData = () => {
+    getMediaData = (mediaID) => {
         let that = this;
-        let url = `${constants.mediaApi}/${this.state.userData}?fields=id,media_type,media_url,username,timestamp&access_token=${sessionStorage.getItem('access-token')}`;
+        let url = `${constants.mediaApi}/${mediaID}?fields=id,media_type,media_url,username,timestamp&access_token=${sessionStorage.getItem('access-token')}`;
         return fetch(url,{
             method:'GET',
         }).then((response) =>{
             return response.json();
         }).then((jsonResponse) =>{
             that.setState({
-            data:jsonResponse.data,
-            filteredData:jsonResponse.data
+            media_url:jsonResponse.media_url,
+            username:jsonResponse.username,
+            timestamp:jsonResponse.timestamp,
             });
+            console.log(that.state.timestamp);
         }).catch((error) => {
           console.log('error user data',error);
         });
@@ -110,44 +113,46 @@ class Home extends Component{
 
     componentDidMount(){
         this.getUserMediaData();
-        this.getMediaData();
+        this.getMediaData("17848947320182404");
+        // console.log(this.data.username);
     }
 
     render(){
         const{classes, item} = this.props;
+        const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
 
-        
         return(
             <div>
                 <Header
-                    userProfileUrl={"https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg"}
+                    userProfileUrl={profile_picture}
                     screen={"Home"}
                     searchHandler={this.onSearchEntered}
                     handleLogout={this.logout}
                     handleAccount={this.navigateToAccount}/>
-                {/* <div className={classes.grid}>
+                <div className={classes.grid}>
                     <GridList className={classes.gridList} cellHeight={'auto'}>
-                        <GridListTile>
-                            <div className="body-main-container">
-                                <Card className={classes.card}>
-                                    <CardHeader
-                                        avatar={
-                                            <Avatar alt="User Profile Pic" src={"https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg"} className={classes.avatar}/>
-                                            }
-                                            title={item.user.username}
-                                            />
-                                    <CardContent>
-                                        <CardMedia
-                                            className={classes.media}
-                                            image={item.images.standard_resolution.url}
-                                            title={item.caption.text}
-                                        />
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </GridListTile>
+                        <div className="body-main-container">
+                            <Card className={classes.card}>
+                                <CardHeader
+                                    avatar={
+                                        <Avatar src={profile_picture} className={classes.avatar}/>
+                                        }
+                                        title={this.state.username}
+                                        subheader={ <Moment format="MM/DD/YYYY HH:mm:ss">
+                                            {this.state.timestamp}
+                                        </Moment>}
+                                />    
+                                <CardContent>
+                                    <CardMedia
+                                        // className={classes.media}
+                                        // image={this.state.media_url}
+                                        // title={item.caption.text}
+                                    />
+                                </CardContent> 
+                            </Card>
+                        </div>
                     </GridList>
-                </div> */}
+                </div>
             </div>
         )
     }
