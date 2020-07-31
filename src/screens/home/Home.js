@@ -18,9 +18,6 @@ const styles = theme => ({
         maxWidth: 500,
         margin: "auto",
     },
-    media: {
-        paddingTop: "70%"
-    },
     avatar: {
         margin: 10,
     },
@@ -87,6 +84,10 @@ class Home extends Component{
             that.setState({
             userData:jsonResponse.data
             });
+            console.log(that.state.userData);
+            Object.keys(that.state.userData).forEach(function(key) {
+                console.log(that.state.userData[key].caption);
+              });
         }).catch((error) => {
           console.log('error user data',error);
         });
@@ -94,18 +95,19 @@ class Home extends Component{
     
     getMediaData = (mediaID) => {
         let that = this;
-        let url = `${constants.mediaApi}/${mediaID}?fields=id,media_type,media_url,username,timestamp&access_token=${sessionStorage.getItem('access-token')}`;
+        let url = `${constants.mediaApi}/${mediaID}?fields=id,media_type,media_url,username,timestamp,caption&access_token=${sessionStorage.getItem('access-token')}`;
         return fetch(url,{
             method:'GET',
         }).then((response) =>{
             return response.json();
         }).then((jsonResponse) =>{
             that.setState({
-            media_url:jsonResponse.media_url,
-            username:jsonResponse.username,
-            timestamp:jsonResponse.timestamp,
+            media_url: jsonResponse.media_url,
+            username: jsonResponse.username,
+            timestamp: jsonResponse.timestamp,
+            caption: jsonResponse.caption
             });
-            console.log(that.state.timestamp);
+            //console.log(that.state.caption);
         }).catch((error) => {
           console.log('error user data',error);
         });
@@ -136,18 +138,22 @@ class Home extends Component{
                                 <CardHeader
                                     avatar={
                                         <Avatar src={profile_picture} className={classes.avatar}/>
-                                        }
-                                        title={this.state.username}
-                                        subheader={ <Moment format="MM/DD/YYYY HH:mm:ss">
+                                    }
+                                    title={this.state.username}
+                                    subheader={ <Moment format="MM/DD/YYYY HH:mm:ss">
                                             {this.state.timestamp}
-                                        </Moment>}
+                                    </Moment>}
                                 />    
                                 <CardContent>
-                                    <CardMedia
-                                        // className={classes.media}
-                                        // image={this.state.media_url}
-                                        // title={item.caption.text}
+                                    <CardMedia component="img"
+                                        image={this.state.media_url}
+                                        title={this.state.caption}
                                     />
+                                    <div  className={classes.hr}>
+                                        <Typography component="p">
+                                            {this.state.caption}
+                                        </Typography>
+                                    </div>
                                 </CardContent> 
                             </Card>
                         </div>
