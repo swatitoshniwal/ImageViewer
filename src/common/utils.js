@@ -1,4 +1,4 @@
 export const constants = {
-    listMediaApi:"https://graph.instagram.com/me/media",
-    mediaApi:"https://graph.instagram.com/"
+    listMediaApi: "https://graph.instagram.com/me/media",
+    generalApi: "https://graph.instagram.com/"
 }
