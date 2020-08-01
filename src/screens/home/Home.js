@@ -56,6 +56,8 @@ const styles = theme => ({
     },
 });
 
+const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -111,7 +113,7 @@ class Home extends Component {
             that.setState({
                 media: jsonResponse.data
             });
-            console.log(that.state.media);
+            // console.log(that.state.media);
         }).catch((error) => {
             console.log('error user data', error);
         });
@@ -163,36 +165,13 @@ class Home extends Component {
         this.getUserData();
     }
 
-    // likeClickHandler = (id) =>{
-    //     console.log('like id:',id);
-    //     var foundItem = this.state.data.find((item) => {
-    //         return item.id === id;
-    //     })
-
-    //     if (typeof foundItem !== undefined) {
-    //         if (!this.state.likeSet.has(id)) {
-    //             foundItem.likes.count++;
-    //             this.setState(({likeSet}) => ({
-    //                 likeSet:new Set(likeSet.add(id))
-    //             }))
-    //         }else {
-    //             foundItem.likes.count--;
-    //             this.setState(({likeSet}) =>{
-    //                 const newLike = new Set(likeSet);
-    //                 newLike.delete(id);
-    //                 return {
-    //                     likeSet:newLike
-    //                 };
-    //             });
-    //         }
-    //     }
-    // }
     likeClickHandler = (id) => {
-        console.log('like id:', id);
+        // console.log('like id:', id);
         var foundItem;
         for (var i = 0; i < this.state.media.length; i++) {
             if (this.state.media[i].id === id) {
-                foundItem = id;
+                foundItem = this.state.media[i];
+                break;
             }
         }
 
@@ -215,10 +194,32 @@ class Home extends Component {
         }
     }
 
+    addCommentClickHandler = (id)=>{
+        if (this.state.currentComment === "" || typeof this.state.currentComment === undefined) {
+            return;
+        }
+    
+        let commentList = this.state.comments.hasOwnProperty(id)?
+            this.state.comments[id].concat(this.state.currentComment): [].concat(this.state.currentComment);
+    
+        this.setState({
+            comments:{
+                ...this.state.comments,
+                [id]:commentList
+            },
+            currentComment:''
+        })
+    }
+    
+    
+    commentTypeEvent = (e) => {
+        this.setState({
+            currentComment:e.target.value
+        });
+    }
+
     render() {
-        const { classes, item, comments } = this.props;
-        const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
-        // console.log(this.state.media);
+        const {classes, item, comments} = this.props;
 
         return (
             <div>
@@ -233,12 +234,12 @@ class Home extends Component {
                         {this.state.media.map(item => (
                             <GridListTile key={item.id}>
                                 <HomeItem
-                                    classes={classes}
-                                    item={item}
-                                    onLikedClicked={this.likeClickHandler}
-                                    onAddCommentClicked={this.addCommentClickHandler}
-                                    commentChangeHandler={this.commentChangeHandler}
-                                    comments={this.state.comments} />
+                                    classes = {classes}
+                                    item = {item}
+                                    likeCounter = {this.likeClickHandler}
+                                    commentAddEvent = {this.addCommentClickHandler}
+                                    commentTypeEvent = {this.commentTypeEvent}
+                                    comments = {this.state.comments} />
                             </GridListTile>
                         ))}
                     </GridList>
@@ -258,10 +259,9 @@ class HomeItem extends Component {
     }
 
     render() {
-        const { classes, item, comments } = this.props;
-        const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
-        // console.log("HomeItem");
-        // console.log(this.props);
+        const {classes, item, comments} = this.props;
+        console.log("HomeItem");
+        console.log(item);
 
 
         // let hashTags = item.tags.map(hash =>{
@@ -296,7 +296,7 @@ class HomeItem extends Component {
                         </div>
                     </CardContent>
                     <CardActions>
-                        <IconButton aria-label="Add to favorites" onClick={this.onLikeClicked.bind(item.id)}>
+                        <IconButton aria-label="Add to favorites" onClick={this.likeClickEvent.bind(this, item.id)}>
                             {this.state.isLiked && <FavoriteIconFill style={{ color: '#F44336' }} />}
                             {!this.state.isLiked && <FavoriteIconBorder />}
                         </IconButton>
@@ -309,7 +309,7 @@ class HomeItem extends Component {
                             return (
                                 <div key={index} className="row">
                                     <Typography component="p" style={{ fontWeight: 'bold' }}>
-                                        {sessionStorage.getItem('username')}:
+                                        {sessionStorage.getItem('username')}:&nbsp;
                                     </Typography>
                                     <Typography component="p" >
                                         {comment}
@@ -320,10 +320,10 @@ class HomeItem extends Component {
                         <div className={classes.formControl}>
                             <FormControl style={{ flexGrow: 1 }}>
                                 <InputLabel htmlFor="comment">Add Comment</InputLabel>
-                                <Input id="comment" value={this.state.comment} onChange={this.commentChangeHandler} />
+                                <Input id="comment" value={this.state.comment} onChange={this.commentTypeEvent} />
                             </FormControl>
                             <FormControl>
-                                <Button onClick={this.onAddCommentClicked.bind(this, item.id)}
+                                <Button onClick={this.commentAddEvent.bind(this, item.id)}
                                     variant="contained" color="primary">
                                     ADD
                             </Button>
@@ -335,7 +335,7 @@ class HomeItem extends Component {
         )
     }
 
-    onLikeClicked = (id) => {
+    likeClickEvent = (id) => {
         // console.log(this.props);
         if (this.state.isLiked) {
             this.setState({
@@ -346,25 +346,25 @@ class HomeItem extends Component {
                 isLiked: true
             });
         }
-        console.log(id);
-        // this.props.onLikedClicked(id)
+        // console.log(id);
+        this.props.likeCounter(id)
     }
 
-    commentChangeHandler = (e) => {
+    commentTypeEvent = (e) => {
         this.setState({
             comment: e.target.value,
         });
-        this.props.commentChangeHandler(e);
+        this.props.commentTypeEvent(e);
     }
 
-    onAddCommentClicked = (id) => {
+    commentAddEvent = (id) => {
         if (this.state.comment === "" || typeof this.state.comment === undefined) {
             return;
         }
         this.setState({
             comment: ""
         });
-        this.props.onAddCommentClicked(id);
+        this.props.commentAddEvent(id);
     }
 }
 
