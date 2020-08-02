@@ -56,8 +56,6 @@ const styles = theme => ({
     },
 });
 
-const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
-
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -71,6 +69,7 @@ class Home extends Component {
             likeSet: new Set(),
             isLiked: false,
             comments: {},
+            profile_picture: sessionStorage.getItem('profile-picture')
         }
     }
 
@@ -111,7 +110,7 @@ class Home extends Component {
                 mediadata[i]["likes"] = Math.floor(Math.random() * 20);
             }
             that.setState({
-                media: jsonResponse.data
+                media: mediadata
             });
             // console.log(that.state.media);
         }).catch((error) => {
@@ -219,11 +218,10 @@ class Home extends Component {
 
     render() {
         const {classes, item, comments} = this.props;
-
         return (
             <div>
                 <Header
-                    userProfileUrl={profile_picture}
+                    userProfileUrl={this.state.profile_picture}
                     screen={"Home"}
                     searchHandler={this.onSearchEntered}
                     handleLogout={this.logout}
@@ -254,6 +252,7 @@ class HomeItem extends Component {
         this.state = {
             isLiked: false,
             comment: '',
+            profile_picture: sessionStorage.getItem('profile-picture')
         }
     }
 
@@ -304,7 +303,7 @@ class HomeItem extends Component {
                 <Card className={classes.card}>
                     <CardHeader
                         avatar={
-                            <Avatar alt="User Profile Pic" src={profile_picture} className={classes.avatar} />
+                            <Avatar alt="User Profile Pic" src={this.state.profile_picture} className={classes.avatar} />
                         }
                         title={item.username}
                         subheader={<Moment format="MM/DD/YYYY HH:mm:ss">

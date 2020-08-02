@@ -54,9 +54,11 @@ class Login extends Component{
         if (this.state.username === "" || this.state.password === "") { return }
 
         if (this.state.username === "swati" && this.state.password === "gandhi") {
-            sessionStorage.setItem('username','admin');
-            sessionStorage.setItem('user-id', '17841404489820598')
-            sessionStorage.setItem('access-token', 'IGQVJVSU9IRC0zdUI1bHVpa1VNVDNSSGNOUmhfUUJKdEVKeHgwWUdzbWNwXzhHS1MtRUhJQ19pZAnlQUU56NTkxMmlwenFZAYW5Xa1ZAramhOS0JxbTY0TjRxWUI2aU1zYzdlQjdKN0tqT0toZAW9vY1Y3SnlPeFo5SE1hd0ow');
+            sessionStorage.setItem('username','swati.toshniwal2');
+            sessionStorage.setItem('user-id', '17841404489820598');
+            sessionStorage.setItem('access-token', 'IGQVJYWVlTbXVhN1U1VWl0ZAzdwQUxNOVJLMmVpczRfWnRXQXA3U2UwbWpmRkUxbEVTY2xrb3A1YTkySE43TEdTcXlmQnAxU1lUNGJMOFppTXNEeXQ0V0w4em9oTF92OHhQSGhGWjdkVTljVlRCcC1nVERkZAk9GZAFd5SExz');
+            sessionStorage.setItem('profile-picture', "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg");
+            sessionStorage.setItem('user-fullname', 'Swati Gandhi');
             this.setState({ loggedIn: true });
             this.navigateToHome();
         } else {
