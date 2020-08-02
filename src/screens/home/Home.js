@@ -128,7 +128,6 @@ class Home extends Component {
         }).then((response) => {
             return response.json();
         }).then((jsonResponse) => {
-            //console.log(jsonResponse.caption.match(/\#[a-zA-Z]+\b/));
             that.setState({
                 userData: jsonResponse
             });
@@ -258,10 +257,43 @@ class HomeItem extends Component {
         }
     }
 
+    likeClickEvent = (id) => {
+        // console.log(this.props);
+        if (this.state.isLiked) {
+            this.setState({
+                isLiked: false
+            });
+        } else {
+            this.setState({
+                isLiked: true
+            });
+        }
+        // console.log(id);
+        this.props.likeCounter(id)
+    }
+
+    commentTypeEvent = (e) => {
+        this.setState({
+            comment: e.target.value,
+        });
+        this.props.commentTypeEvent(e);
+    }
+
+    commentAddEvent = (id) => {
+        if (this.state.comment === "" || typeof this.state.comment === undefined) {
+            return;
+        }
+        this.setState({
+            comment: ""
+        });
+        this.props.commentAddEvent(id);
+    }
+
     render() {
         const {classes, item, comments} = this.props;
         console.log("HomeItem");
         console.log(item);
+        console.log(item.caption.match(/\#[a-zA-Z]+\b/));
 
 
         // let hashTags = item.tags.map(hash =>{
@@ -278,7 +310,6 @@ class HomeItem extends Component {
                         subheader={<Moment format="MM/DD/YYYY HH:mm:ss">
                             {item.timestamp}
                         </Moment>}
-                    // subheader={time}
                     />
                     <CardContent>
                         <CardMedia
@@ -333,38 +364,6 @@ class HomeItem extends Component {
                 </Card>
             </div>
         )
-    }
-
-    likeClickEvent = (id) => {
-        // console.log(this.props);
-        if (this.state.isLiked) {
-            this.setState({
-                isLiked: false
-            });
-        } else {
-            this.setState({
-                isLiked: true
-            });
-        }
-        // console.log(id);
-        this.props.likeCounter(id)
-    }
-
-    commentTypeEvent = (e) => {
-        this.setState({
-            comment: e.target.value,
-        });
-        this.props.commentTypeEvent(e);
-    }
-
-    commentAddEvent = (id) => {
-        if (this.state.comment === "" || typeof this.state.comment === undefined) {
-            return;
-        }
-        this.setState({
-            comment: ""
-        });
-        this.props.commentAddEvent(id);
     }
 }
 
