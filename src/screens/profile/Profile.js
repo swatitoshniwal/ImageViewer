@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './Profile.css';
 import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
@@ -19,13 +19,13 @@ import GridListTile from '@material-ui/core/GridListTile';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIconBorder from '@material-ui/icons/FavoriteBorder';
 import FavoriteIconFill from '@material-ui/icons/Favorite';
-import {constants} from '../../common/utils';
+import { constants } from '../../common/utils';
 
-const styles={
+const styles = {
 
 };
 
-const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
+//const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
 
 class Profile extends Component {
     constructor(props) {
@@ -38,7 +38,9 @@ class Profile extends Component {
             full_name: sessionStorage.getItem('user-fullname'),
             follows: 10,
             followed_by: 20,
-            username: sessionStorage.getItem('username')
+            username: sessionStorage.getItem('username'),
+            editOpen: false,
+            fullNameRequired: 'dispNone',
         }
     }
 
@@ -76,35 +78,93 @@ class Profile extends Component {
         this.props.history.replace('/');
     }
 
-    render(){
-        const {classes, item, comments} = this.props;
+    handleOpenImageModal = (event) => {
+        var result = this.state.mediaData.find(item => {
+            return item.id === event.target.id
+        })
+        console.log(result);
+        this.setState({ imageModalOpen: true, currentItem: result });
+    }
+
+    inputFullNameChangeHandler = (e) => {
+        this.setState({
+            newFullName: e.target.value
+        })
+    }
+
+    updateClickHandler = () => {
+        if (this.state.newFullName === '') {
+            this.setState({ fullNameRequired: 'dispBlock' })
+        } else {
+            this.setState({ fullNameRequired: 'dispNone' })
+        }
+
+        if (this.state.newFullName === "") { return }
+
+        this.setState({
+            full_name: this.state.newFullName
+        })
+
+        this.handleCloseEditModal()
+    }
+
+    handleOpenEditModal = () => {
+        this.setState({ editOpen: true });
+    }
+
+    render() {
+        const { classes, item, comments } = this.props;
         console.log(this.state.full_name);
-    
-        return(
+
+        return (
             <div>
                 <Header
                     screen={"Profile"}
                     userProfileUrl={this.state.profile_picture}
-                    handleLogout={this.logout}/>
+                    handleLogout={this.logout} />
                 <div className="information">
                     <Avatar
                         alt="User Image"
                         src={this.state.profile_picture}
-                        style={{width: "70px", height: "70px"}}
+                        style={{ width: "70px", height: "70px" }}
                     />
-                    <span style={{marginLeft: "20px"}}>
-                        <div style={{width: "600px", fontSize: "big"}}> {this.state.username} <br />
-                            <div style={{float: "left", width: "200px", fontSize: "x-small"}}> Posts: {this.state.number_posts} </div>
-                            <div style={{float: "left", width: "200px", fontSize: "x-small"}}> Follows: {this.state.follows} </div>
-                            <div style={{float: "left", width: "200px", fontSize: "x-small"}}> Followed By: {this.state.followed_by}</div> <br />
+                    <span style={{ marginLeft: "20px" }}>
+                        <div style={{ width: "600px", fontSize: "big" }}> {this.state.username} <br />
+                            <div style={{ float: "left", width: "200px", fontSize: "x-small" }}> Posts: {this.state.number_posts} </div>
+                            <div style={{ float: "left", width: "200px", fontSize: "x-small" }}> Follows: {this.state.follows} </div>
+                            <div style={{ float: "left", width: "200px", fontSize: "x-small" }}> Followed By: {this.state.followed_by}</div> <br />
                         </div>
-                        <div style={{fontSize: "small"}}> 
+                        <div style={{ fontSize: "small" }}>
                             {this.state.full_name}&nbsp;&nbsp;&nbsp;&nbsp;
                             {/* <Button style={{marginLeft: "20px"}} onClick={this.handleOpenEditModal}></Button> */}
-                            <Fab color="secondary" aria-label="edit" size="mini" className="edit-button">
+                            <Fab color="secondary" aria-label="edit" size="mini" className="edit-button" onClick={this.handleOpenEditModal}>
                                 <EditIcon />
                             </Fab>
+                            {/* <Button mini variant="fab" color="secondary" aria-label="Edit" className="edit-button" style={{marginLeft: "20px"}} onClick={this.handleOpenEditModal}>
+                                <EditIcon />
+                            </Button>  */}
                         </div>
+                        <Modal
+                            aria-labelledby="edit-modal"
+                            aria-describedby="modal to edit user full name"
+                            open={this.state.editOpen}
+                            onClose={this.handleCloseEditModal}
+                            style={{ alignItems: 'center', justifyContent: 'center' }}
+                        >
+                        <div style={styles.paper}>
+                            <Typography variant="h5" id="modal-title">
+                                Edit
+                            </Typography><br />
+                            <FormControl required>
+                                <InputLabel htmlFor="fullname">Full Name</InputLabel>
+                                <Input id="fullname" onChange={this.inputFullNameChangeHandler} />
+                                <FormHelperText className={this.state.fullNameRequired}><span className="red">required</span></FormHelperText>
+                            </FormControl><br /><br /><br />
+                            <Button variant="contained" color="primary" onClick={this.updateClickHandler}>
+                                UPDATE
+                            </Button>
+                        </div>
+                        </Modal>
                     </span>
                 </div>
             </div>
