@@ -38,14 +38,17 @@ class Login extends Component{
         };
     }
 
+    //Accept input user name for the session
     inputUsernameChangeHandler = (e) => {
         this.setState({ username: e.target.value })
     }
 
+    //Accept password for the session
     inputPasswordChangeHandler = (e) => {
         this.setState({ password: e.target.value })
     }
 
+    //Verify username and password to assign access-token and other hard-coded values for the session
     loginClickHandler = () => {
         this.setState({ incorrectUsernamePassword: "dispNone" });
         this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
@@ -54,11 +57,11 @@ class Login extends Component{
         if (this.state.username === "" || this.state.password === "") { return }
 
         if (this.state.username === "swati" && this.state.password === "gandhi") {
-            sessionStorage.setItem('username','swati.toshniwal2');
-            sessionStorage.setItem('user-id', '17841404489820598');
-            sessionStorage.setItem('access-token', 'IGQVJXdWpvV2VIekIwbTVEMFVyckJWWU80STZAYLXZA3bTUteDh1bzYwYVdIdV9HT1lqNFFFRFFYYWpfWjJYcGswSDhYNlh3MnFJNEdTdmNudXlUYjE4NmJqRHdOMHkwRUNOX1pTV3BHVlRDUGlMV0Nab2w2cGhBSmJCWnRN');
-            sessionStorage.setItem('profile-picture', "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg");
-            sessionStorage.setItem('user-fullname', 'Swati Gandhi');
+            sessionStorage.setItem('username','swati.toshniwal2');//Generic username, not specifically related to IG
+            sessionStorage.setItem('user-id', '17841404489820598');//Instagram user-id
+            sessionStorage.setItem('access-token', 'IGQVJXdWpvV2VIekIwbTVEMFVyckJWWU80STZAYLXZA3bTUteDh1bzYwYVdIdV9HT1lqNFFFRFFYYWpfWjJYcGswSDhYNlh3MnFJNEdTdmNudXlUYjE4NmJqRHdOMHkwRUNOX1pTV3BHVlRDUGlMV0Nab2w2cGhBSmJCWnRN');//access token generated using IG API
+            sessionStorage.setItem('profile-picture', "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg");//Hard-coded url for profile picture
+            sessionStorage.setItem('user-fullname', 'Shakuntala Devi');//Generic full username, hard-coded 
             this.setState({ loggedIn: true });
             this.navigateToHome();
         } else {
@@ -66,6 +69,7 @@ class Login extends Component{
         }
     }
 
+    //Returns to Home page
     navigateToHome = () =>{
         this.props.history.push('/home');
     }

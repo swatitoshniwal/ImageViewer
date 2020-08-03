@@ -73,6 +73,7 @@ class Home extends Component {
         }
     }
 
+    //Returns relevant media by sub string matching
     onSearchEntered = (value) => {
         console.log('search value', value);
         let filteredMedia = this.state.allMedia;
@@ -87,15 +88,18 @@ class Home extends Component {
         })
     }
 
+    //Logout of the section
     logout = () => {
         sessionStorage.clear();
         this.props.history.replace('/');
     }
 
+    //Returns to profile page
     navigateToAccount = () => {
         this.props.history.push('/profile');
     }
 
+    //Gets media information through IG graph API
     getUserMediaData = () => {
         let that = this;
         const fields = 'id,media_type,media_url,username,timestamp,caption';
@@ -107,10 +111,10 @@ class Home extends Component {
         }).then((jsonResponse) => {
             const media = jsonResponse.data;
             var arrayLength = media.length;
-            for (var i = 0; i < arrayLength; i++) {
-                media[i]["likes"] = Math.floor(Math.random() * 20);
-                media[i]["hashtags"] = media[i]["caption"].match(/#[a-zA-Z]+\b/gi);
-                media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");
+            for (var i = 0; i < arrayLength; i++) {//For looping through all the media
+                media[i]["likes"] = Math.floor(Math.random() * 20);//random generation of number of likes between 0-20. Value persists for the session
+                media[i]["hashtags"] = media[i]["caption"].match(/#[a-zA-Z]+\b/gi);//For extracting hashtags from caption
+                media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");//For removing hashtags from the caption
             }
             that.setState({
                 media: media,
@@ -122,6 +126,7 @@ class Home extends Component {
         });
     }
 
+    //Gets user information through IG graph API
     getUserData = () => {
         let that = this;
         const fields = 'username';
@@ -144,8 +149,9 @@ class Home extends Component {
         this.getUserData();
     }
 
+    //To record likes
     likeClickHandler = (id) => {
-        // console.log('like id:', id);
+        console.log('like id:', id);
         var foundItem;
         for (var i = 0; i < this.state.media.length; i++) {
             if (this.state.media[i].id === id) {
@@ -173,6 +179,7 @@ class Home extends Component {
         }
     }
 
+    //To add comments
     addCommentClickHandler = (id) => {
         if (this.state.currentComment === "" || typeof this.state.currentComment === undefined) {
             return;
@@ -191,6 +198,7 @@ class Home extends Component {
     }
 
 
+    //To store string typed in comment box
     commentTypeEvent = (e) => {
         this.setState({
             currentComment: e.target.value
@@ -237,8 +245,8 @@ class HomeItem extends Component {
         }
     }
 
+    //To detect the click on like button
     likeClickEvent = (id) => {
-        // console.log(this.props);
         if (this.state.isLiked) {
             this.setState({
                 isLiked: false
@@ -248,10 +256,11 @@ class HomeItem extends Component {
                 isLiked: true
             });
         }
-        // console.log(id);
+        console.log(id);
         this.props.likeCounter(id)
     }
 
+    //To store string typed in comment box
     commentTypeEvent = (e) => {
         this.setState({
             comment: e.target.value,
@@ -259,6 +268,7 @@ class HomeItem extends Component {
         this.props.commentTypeEvent(e);
     }
 
+    //To add new comments and display on the UI
     commentAddEvent = (id) => {
         if (this.state.comment === "" || typeof this.state.comment === undefined) {
             return;

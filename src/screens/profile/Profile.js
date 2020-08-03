@@ -62,6 +62,7 @@ class Profile extends Component {
         }
     }
 
+    //Gets user information through IG graph API
     getUserMedia = () => {
         let that = this;
         const fields = 'id,media_type,media_url,username,timestamp,caption';
@@ -73,10 +74,10 @@ class Profile extends Component {
         }).then((jsonResponse) => {
             const media = jsonResponse.data;
             var arrayLength = media.length;
-            for (var i = 0; i < arrayLength; i++) {
-                media[i]["likes"] = Math.floor(Math.random() * 20);
-                media[i]["hashtags"] = media[i]["caption"].match(/#[a-zA-Z]+\b/gi);
-                media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");
+            for (var i = 0; i < arrayLength; i++) {//For looping through all the media
+                media[i]["likes"] = Math.floor(Math.random() * 20);//random generation of number of likes between 0-20. Value persists for the session
+                media[i]["hashtags"] = media[i]["caption"].match(/#[a-zA-Z]+\b/gi);//For extracting hashtags from caption
+                media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");//For removing hashtags from the caption
             }
             that.setState({
                 media: media,
@@ -90,18 +91,20 @@ class Profile extends Component {
 
     componentDidMount() {
         this.getUserMedia();
-        // this.getUserData();
     }
 
+    //To logout through the current session
     logout = () => {
         sessionStorage.clear();
         this.props.history.replace('/');
     }
 
+    //Navigates to the same page
     navigateToAccount = () => {
         this.props.history.push('/profile');
     }
 
+    //To open image in new modal and display the relevant information
     handleOpenImageModal = (event) => {
         var result = this.state.media.find(item => {
             return item.id === event.target.id
@@ -110,16 +113,19 @@ class Profile extends Component {
         this.setState({ imageModalOpen: true, currentItem: result });
     }
 
+    //To close the image modal
     handleCloseImageModal = () => {
         this.setState({ imageModalOpen: false });
     }
 
+    //To store the updated username
     inputFullNameChangeHandler = (e) => {
         this.setState({
             newFullName: e.target.value
         })
     }
 
+    // To update the changed username
     updateClickHandler = () => {
         if (this.state.newFullName === '') {
             this.setState({ fullNameRequired: 'dispBlock' })
@@ -136,14 +142,17 @@ class Profile extends Component {
         this.handleCloseEditModal()
     }
 
+    //To open the edit modal
     handleOpenEditModal = () => {
         this.setState({ editOpen: true });
     }
 
+    //To close the edit modal
     handleCloseEditModal = () => {
         this.setState({ editOpen: false });
     }
 
+    //To record likes
     likeClickHandler = (id) => {
         // console.log('like id:', id);
         var foundItem;
@@ -173,6 +182,7 @@ class Profile extends Component {
         }
     }
 
+    //To add comments
     onAddCommentClicked = (id) => {
         console.log('id', id);
         if (this.state.currentComment === "" || typeof this.state.currentComment === undefined) {
@@ -191,6 +201,7 @@ class Profile extends Component {
         })
     }
 
+    //To change the comments
     commentChangeHandler = (e) => {
         this.setState({
             currentComment: e.target.value
@@ -198,7 +209,6 @@ class Profile extends Component {
     }
 
     render() {
-        //    const { classes, item, comments } = this.props;
         console.log(this.state.full_name);
 
         return (
