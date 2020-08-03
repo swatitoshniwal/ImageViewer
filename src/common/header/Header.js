@@ -91,7 +91,7 @@ class Header extends Component{
                 <AppBar className={classes.appheader}> 
                     <Toolbar>
                         <Box flexGrow={1}>
-                            {(screen === "Login" || screen === "Home") && <span className="header-logo">Image Viewer</span>} 
+                            {(screen === "Login" || screen === "Home" || screen === "Profile") && <span className="header-logo">Image Viewer</span>} 
                         </Box>
                         {(screen === "Home") &&
                             <div className={classes.search}>
@@ -102,7 +102,7 @@ class Header extends Component{
                                 placeholder="Search…" 
                                 classes={{input: classes.inputInput}}/>
                             </div>}
-                        {(screen === "Home") &&
+                        {(screen === "Home" || screen === "Profile") &&
                             <div>
                                 <IconButton onClick={this.handleClick}>
                                     <Avatar alt="Profile Pic" src={this.props.userProfileUrl} 
@@ -122,7 +122,7 @@ class Header extends Component{
                                         horizontal: 'left',
                                     }}>
                                     <div style={{padding:'5px'}}>
-                                        {(screen === "Home") &&
+                                        {(screen === "Home" || screen === "Profile") &&
                                         <div>
                                             <MenuItem onClick={this.handleAccount}>My Account</MenuItem>
                                             <div className={classes.hr}/>
