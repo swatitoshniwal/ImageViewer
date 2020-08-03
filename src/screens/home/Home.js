@@ -56,8 +56,6 @@ const styles = theme => ({
     },
 });
 
-const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
-
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -71,19 +69,21 @@ class Home extends Component {
             likeSet: new Set(),
             isLiked: false,
             comments: {},
+            profile_picture: sessionStorage.getItem('profile-picture')
         }
     }
 
     onSearchEntered = (value) => {
         console.log('search value', value);
-        let filteredData = this.state.data;
-        filteredData = filteredData.filter((data) => {
-            let string = data.caption.text.toLowerCase();
-            let subString = value.toLowerCase();
-            return string.includes(subString);
+        let filteredMedia = this.state.allMedia;
+        console.log(this.state);
+        filteredMedia = filteredMedia.filter((data) => {
+            let string = data.caption.toLowerCase();
+            return string.includes(value.toLowerCase());
         })
+        console.log(filteredMedia);
         this.setState({
-            filteredData
+            media: filteredMedia
         })
     }
 
@@ -105,13 +105,16 @@ class Home extends Component {
         }).then((response) => {
             return response.json();
         }).then((jsonResponse) => {
-            const mediadata = jsonResponse.data;
-            var arrayLength = mediadata.length;
+            const media = jsonResponse.data;
+            var arrayLength = media.length;
             for (var i = 0; i < arrayLength; i++) {
-                mediadata[i]["likes"] = Math.floor(Math.random() * 20);
+                media[i]["likes"] = Math.floor(Math.random() * 20);
+                media[i]["hashtags"] = media[i]["caption"].match(/#[a-zA-Z]+\b/gi);
+                media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");
             }
             that.setState({
-                media: jsonResponse.data
+                media: media,
+                allMedia: media
             });
             // console.log(that.state.media);
         }).catch((error) => {
@@ -128,7 +131,6 @@ class Home extends Component {
         }).then((response) => {
             return response.json();
         }).then((jsonResponse) => {
-            //console.log(jsonResponse.caption.match(/\#[a-zA-Z]+\b/));
             that.setState({
                 userData: jsonResponse
             });
@@ -137,31 +139,8 @@ class Home extends Component {
         });
     }
 
-    // getMediaData = async (mediaID) => {
-    //     let that = this;
-    //     const fields = 'id,media_type,media_url,username,timestamp,caption';
-    //     let url = `${constants.generalApi}/${mediaID}?fields=${fields}&access_token=${sessionStorage.getItem('access-token')}`;
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: 'GET',
-    //         });
-    //         const jsonResponse = await response.json();
-    //         //console.log(jsonResponse.caption.match(/\#[a-zA-Z]+\b/));
-    //         that.setState({
-    //             media_url: jsonResponse.media_url,
-    //             username: jsonResponse.username,
-    //             timestamp: jsonResponse.timestamp,
-    //             caption: jsonResponse.caption
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.log('error user data', error);
-    //     }
-    // }
-
     componentDidMount() {
         this.getUserMediaData();
-        // this.getMediaData("17848947320182404");
         this.getUserData();
     }
 
@@ -194,37 +173,36 @@ class Home extends Component {
         }
     }
 
-    addCommentClickHandler = (id)=>{
+    addCommentClickHandler = (id) => {
         if (this.state.currentComment === "" || typeof this.state.currentComment === undefined) {
             return;
         }
-    
-        let commentList = this.state.comments.hasOwnProperty(id)?
-            this.state.comments[id].concat(this.state.currentComment): [].concat(this.state.currentComment);
-    
+
+        let commentList = this.state.comments.hasOwnProperty(id) ?
+            this.state.comments[id].concat(this.state.currentComment) : [].concat(this.state.currentComment);
+
         this.setState({
-            comments:{
+            comments: {
                 ...this.state.comments,
-                [id]:commentList
+                [id]: commentList
             },
-            currentComment:''
+            currentComment: ''
         })
     }
-    
-    
+
+
     commentTypeEvent = (e) => {
         this.setState({
-            currentComment:e.target.value
+            currentComment: e.target.value
         });
     }
 
     render() {
-        const {classes, item, comments} = this.props;
-
+        const { classes } = this.props;
         return (
             <div>
                 <Header
-                    userProfileUrl={profile_picture}
+                    userProfileUrl={this.state.profile_picture}
                     screen={"Home"}
                     searchHandler={this.onSearchEntered}
                     handleLogout={this.logout}
@@ -234,12 +212,12 @@ class Home extends Component {
                         {this.state.media.map(item => (
                             <GridListTile key={item.id}>
                                 <HomeItem
-                                    classes = {classes}
-                                    item = {item}
-                                    likeCounter = {this.likeClickHandler}
-                                    commentAddEvent = {this.addCommentClickHandler}
-                                    commentTypeEvent = {this.commentTypeEvent}
-                                    comments = {this.state.comments} />
+                                    classes={classes}
+                                    item={item}
+                                    likeCounter={this.likeClickHandler}
+                                    commentAddEvent={this.addCommentClickHandler}
+                                    commentTypeEvent={this.commentTypeEvent}
+                                    comments={this.state.comments} />
                             </GridListTile>
                         ))}
                     </GridList>
@@ -255,30 +233,58 @@ class HomeItem extends Component {
         this.state = {
             isLiked: false,
             comment: '',
+            profile_picture: sessionStorage.getItem('profile-picture'),
         }
     }
 
+    likeClickEvent = (id) => {
+        // console.log(this.props);
+        if (this.state.isLiked) {
+            this.setState({
+                isLiked: false
+            });
+        } else {
+            this.setState({
+                isLiked: true
+            });
+        }
+        // console.log(id);
+        this.props.likeCounter(id)
+    }
+
+    commentTypeEvent = (e) => {
+        this.setState({
+            comment: e.target.value,
+        });
+        this.props.commentTypeEvent(e);
+    }
+
+    commentAddEvent = (id) => {
+        if (this.state.comment === "" || typeof this.state.comment === undefined) {
+            return;
+        }
+        this.setState({
+            comment: ""
+        });
+        this.props.commentAddEvent(id);
+    }
+
     render() {
-        const {classes, item, comments} = this.props;
+        const { classes, item, comments } = this.props;
         console.log("HomeItem");
         console.log(item);
 
-
-        // let hashTags = item.tags.map(hash =>{
-        //     return "#"+hash;
-        // });
         return (
             <div className="body-main-container">
                 <Card className={classes.card}>
                     <CardHeader
                         avatar={
-                            <Avatar alt="User Profile Pic" src={profile_picture} className={classes.avatar} />
+                            <Avatar alt="User Profile Pic" src={this.state.profile_picture} className={classes.avatar} />
                         }
                         title={item.username}
                         subheader={<Moment format="MM/DD/YYYY HH:mm:ss">
                             {item.timestamp}
                         </Moment>}
-                    // subheader={time}
                     />
                     <CardContent>
                         <CardMedia
@@ -290,9 +296,9 @@ class HomeItem extends Component {
                             <Typography component="p">
                                 {item.caption}
                             </Typography>
-                            {/* <Typography style={{ color: '#4dabf5' }} component="p" >
-                                {hashTags.join(' ')}
-                            </Typography> */}
+                            <Typography style={{ color: '#4dabf5' }} component="p" >
+                                {item.hashtags.join(' ')}
+                            </Typography>
                         </div>
                     </CardContent>
                     <CardActions>
@@ -326,45 +332,13 @@ class HomeItem extends Component {
                                 <Button onClick={this.commentAddEvent.bind(this, item.id)}
                                     variant="contained" color="primary">
                                     ADD
-                            </Button>
+                                </Button>
                             </FormControl>
                         </div>
                     </CardContent>
                 </Card>
             </div>
         )
-    }
-
-    likeClickEvent = (id) => {
-        // console.log(this.props);
-        if (this.state.isLiked) {
-            this.setState({
-                isLiked: false
-            });
-        } else {
-            this.setState({
-                isLiked: true
-            });
-        }
-        // console.log(id);
-        this.props.likeCounter(id)
-    }
-
-    commentTypeEvent = (e) => {
-        this.setState({
-            comment: e.target.value,
-        });
-        this.props.commentTypeEvent(e);
-    }
-
-    commentAddEvent = (id) => {
-        if (this.state.comment === "" || typeof this.state.comment === undefined) {
-            return;
-        }
-        this.setState({
-            comment: ""
-        });
-        this.props.commentAddEvent(id);
     }
 }
 
