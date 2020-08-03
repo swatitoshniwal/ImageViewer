@@ -98,7 +98,7 @@ class Profile extends Component {
         this.props.history.replace('/');
     }
 
-    navigateToAccount = () =>{
+    navigateToAccount = () => {
         this.props.history.push('/profile');
     }
 
@@ -198,7 +198,7 @@ class Profile extends Component {
     }
 
     render() {
-    //    const { classes, item, comments } = this.props;
+        //    const { classes, item, comments } = this.props;
         console.log(this.state.full_name);
 
         return (

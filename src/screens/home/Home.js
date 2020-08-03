@@ -75,14 +75,15 @@ class Home extends Component {
 
     onSearchEntered = (value) => {
         console.log('search value', value);
-        let filteredData = this.state.data;
-        filteredData = filteredData.filter((data) => {
-            let string = data.caption.text.toLowerCase();
-            let subString = value.toLowerCase();
-            return string.includes(subString);
+        let filteredMedia = this.state.allMedia;
+        console.log(this.state);
+        filteredMedia = filteredMedia.filter((data) => {
+            let string = data.caption.toLowerCase();
+            return string.includes(value.toLowerCase());
         })
+        console.log(filteredMedia);
         this.setState({
-            filteredData
+            media: filteredMedia
         })
     }
 
@@ -112,7 +113,8 @@ class Home extends Component {
                 media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");
             }
             that.setState({
-                media: media
+                media: media,
+                allMedia: media
             });
             // console.log(that.state.media);
         }).catch((error) => {
@@ -171,32 +173,32 @@ class Home extends Component {
         }
     }
 
-    addCommentClickHandler = (id)=>{
+    addCommentClickHandler = (id) => {
         if (this.state.currentComment === "" || typeof this.state.currentComment === undefined) {
             return;
         }
-    
-        let commentList = this.state.comments.hasOwnProperty(id)?
-            this.state.comments[id].concat(this.state.currentComment): [].concat(this.state.currentComment);
-    
+
+        let commentList = this.state.comments.hasOwnProperty(id) ?
+            this.state.comments[id].concat(this.state.currentComment) : [].concat(this.state.currentComment);
+
         this.setState({
-            comments:{
+            comments: {
                 ...this.state.comments,
-                [id]:commentList
+                [id]: commentList
             },
-            currentComment:''
+            currentComment: ''
         })
     }
-    
-    
+
+
     commentTypeEvent = (e) => {
         this.setState({
-            currentComment:e.target.value
+            currentComment: e.target.value
         });
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         return (
             <div>
                 <Header
@@ -210,12 +212,12 @@ class Home extends Component {
                         {this.state.media.map(item => (
                             <GridListTile key={item.id}>
                                 <HomeItem
-                                    classes = {classes}
-                                    item = {item}
-                                    likeCounter = {this.likeClickHandler}
-                                    commentAddEvent = {this.addCommentClickHandler}
-                                    commentTypeEvent = {this.commentTypeEvent}
-                                    comments = {this.state.comments} />
+                                    classes={classes}
+                                    item={item}
+                                    likeCounter={this.likeClickHandler}
+                                    commentAddEvent={this.addCommentClickHandler}
+                                    commentTypeEvent={this.commentTypeEvent}
+                                    comments={this.state.comments} />
                             </GridListTile>
                         ))}
                     </GridList>
@@ -268,7 +270,7 @@ class HomeItem extends Component {
     }
 
     render() {
-        const {classes, item, comments} = this.props;
+        const { classes, item, comments } = this.props;
         console.log("HomeItem");
         console.log(item);
 
@@ -330,7 +332,7 @@ class HomeItem extends Component {
                                 <Button onClick={this.commentAddEvent.bind(this, item.id)}
                                     variant="contained" color="primary">
                                     ADD
-                            </Button>
+                                </Button>
                             </FormControl>
                         </div>
                     </CardContent>
