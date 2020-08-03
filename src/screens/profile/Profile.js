@@ -43,8 +43,6 @@ const styles = {
 
 };
 
-//const profile_picture = "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg";
-
 class Profile extends Component {
     constructor(props) {
         super(props);
@@ -98,6 +96,10 @@ class Profile extends Component {
     logout = () => {
         sessionStorage.clear();
         this.props.history.replace('/');
+    }
+
+    navigateToAccount = () =>{
+        this.props.history.push('/profile');
     }
 
     handleOpenImageModal = (event) => {
@@ -204,7 +206,9 @@ class Profile extends Component {
                 <Header
                     screen={"Profile"}
                     userProfileUrl={this.state.profile_picture}
-                    handleLogout={this.logout} />
+                    handleLogout={this.logout}
+                    handleAccount={this.navigateToAccount}
+                />
                 <div className="information">
                     <Avatar
                         alt="User Image"
