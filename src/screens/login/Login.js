@@ -56,7 +56,7 @@ class Login extends Component{
         if (this.state.username === "swati" && this.state.password === "gandhi") {
             sessionStorage.setItem('username','swati.toshniwal2');
             sessionStorage.setItem('user-id', '17841404489820598');
-            sessionStorage.setItem('access-token', 'IGQVJYbUJmX2dEemYxZAm1YNHRheDI5RUVYM3MxSU1xbFJqd2s5aTNpS1B0WHhfcmZAGS1ViOXVjWGVpLWI2QVdDNlpSS2h0ZA1EyT2czYk9wcmZAHQzAzOFZAVWTczYkJCbU1mY2RKdGl2NC1ZAQU9ZAMEZA6eDdZAY1pxRkNmUGZAF');
+            sessionStorage.setItem('access-token', 'IGQVJXdWpvV2VIekIwbTVEMFVyckJWWU80STZAYLXZA3bTUteDh1bzYwYVdIdV9HT1lqNFFFRFFYYWpfWjJYcGswSDhYNlh3MnFJNEdTdmNudXlUYjE4NmJqRHdOMHkwRUNOX1pTV3BHVlRDUGlMV0Nab2w2cGhBSmJCWnRN');
             sessionStorage.setItem('profile-picture', "https://cmsimages.tribuneindia.com/gallary_content/2020/7/2020_7$largeimg_1146665666.jpg");
             sessionStorage.setItem('user-fullname', 'Swati Gandhi');
             this.setState({ loggedIn: true });

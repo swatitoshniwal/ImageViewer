@@ -104,13 +104,15 @@ class Home extends Component {
         }).then((response) => {
             return response.json();
         }).then((jsonResponse) => {
-            const mediadata = jsonResponse.data;
-            var arrayLength = mediadata.length;
+            const media = jsonResponse.data;
+            var arrayLength = media.length;
             for (var i = 0; i < arrayLength; i++) {
-                mediadata[i]["likes"] = Math.floor(Math.random() * 20);
+                media[i]["likes"] = Math.floor(Math.random() * 20);
+                media[i]["hashtags"] = media[i]["caption"].match(/#[a-zA-Z]+\b/gi);
+                media[i]["caption"] = media[i]["caption"].replace(/#[a-zA-Z0-9]+\b/gi, "");
             }
             that.setState({
-                media: mediadata
+                media: media
             });
             // console.log(that.state.media);
         }).catch((error) => {
@@ -135,31 +137,8 @@ class Home extends Component {
         });
     }
 
-    // getMediaData = async (mediaID) => {
-    //     let that = this;
-    //     const fields = 'id,media_type,media_url,username,timestamp,caption';
-    //     let url = `${constants.generalApi}/${mediaID}?fields=${fields}&access_token=${sessionStorage.getItem('access-token')}`;
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: 'GET',
-    //         });
-    //         const jsonResponse = await response.json();
-    //         //console.log(jsonResponse.caption.match(/\#[a-zA-Z]+\b/));
-    //         that.setState({
-    //             media_url: jsonResponse.media_url,
-    //             username: jsonResponse.username,
-    //             timestamp: jsonResponse.timestamp,
-    //             caption: jsonResponse.caption
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.log('error user data', error);
-    //     }
-    // }
-
     componentDidMount() {
         this.getUserMediaData();
-        // this.getMediaData("17848947320182404");
         this.getUserData();
     }
 
@@ -217,7 +196,7 @@ class Home extends Component {
     }
 
     render() {
-        const {classes, item, comments} = this.props;
+        const {classes} = this.props;
         return (
             <div>
                 <Header
@@ -252,7 +231,7 @@ class HomeItem extends Component {
         this.state = {
             isLiked: false,
             comment: '',
-            profile_picture: sessionStorage.getItem('profile-picture')
+            profile_picture: sessionStorage.getItem('profile-picture'),
         }
     }
 
@@ -292,12 +271,7 @@ class HomeItem extends Component {
         const {classes, item, comments} = this.props;
         console.log("HomeItem");
         console.log(item);
-        console.log(item.caption.match(/\#[a-zA-Z]+\b/));
 
-
-        // let hashTags = item.tags.map(hash =>{
-        //     return "#"+hash;
-        // });
         return (
             <div className="body-main-container">
                 <Card className={classes.card}>
@@ -320,9 +294,9 @@ class HomeItem extends Component {
                             <Typography component="p">
                                 {item.caption}
                             </Typography>
-                            {/* <Typography style={{ color: '#4dabf5' }} component="p" >
-                                {hashTags.join(' ')}
-                            </Typography> */}
+                            <Typography style={{ color: '#4dabf5' }} component="p" >
+                                {item.hashtags.join(' ')}
+                            </Typography>
                         </div>
                     </CardContent>
                     <CardActions>
